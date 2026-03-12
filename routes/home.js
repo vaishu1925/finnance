@@ -1,35 +1,36 @@
 const express = require("express");
 const router = express.Router();
-const { sql, pool, poolConnect } = require("../config/db");
+const { sql, poolPromise } = require("../config/db");
 
 router.post("/home", async (req, res) => {
 
-    const { financer_id, name } = req.body;
+const { financer_id, name } = req.body;
 
-    try {
+try {
 
-        await poolConnect;
+const pool = await poolPromise;
 
-        const request = pool.request();
+await pool.request()
+.input("financer_id", sql.VarChar(10), financer_id)
+.input("name", sql.VarChar(20), name)
+.execute("fin.sp_UpdateName3");
 
-        request.input("financer_id", sql.VarChar(10), financer_id);
-        request.input("name", sql.VarChar(20), name);
+res.json({
+success: true,
+message: "Name updated successfully"
+});
 
-        await request.execute("fin.sp_UpdateName");
+} catch (err) {
 
-        res.json({
-            success: true,
-            message: "Name updated successfully"
-        });
+console.log(err);
 
-    } catch (err) {
+res.status(500).json({
+success: false,
+message: "Server error"
+});
 
-        console.log(err);
-        res.status(500).json({
-            success: false,
-            message: "Server error"
-        });
-    }
+}
 
 });
+
 module.exports = router;

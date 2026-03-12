@@ -6,6 +6,8 @@ const bodyParser = require('body-parser');
 const financerRoutes = require("./routes/financer");
 const homeRoutes = require("./routes/home");
 const loginRoutes = require("./routes/login");
+const otpRoutes = require("./routes/otp");
+const resetPasswordRoutes = require("./routes/resetpassword");
 
 
 const app = express();
@@ -18,7 +20,8 @@ app.use(express.json());
 app.use("/api", financerRoutes);
 app.use("/api", homeRoutes);
 app.use("/api", loginRoutes);
-
+app.use("/api", otpRoutes);
+app.use("/api", resetPasswordRoutes);
 
 app.listen(PORT, '0.0.0.0', () => {
   console.log(`🚀 Server running at http://192.168.29.236:${PORT}`);

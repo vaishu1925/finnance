@@ -3,7 +3,7 @@ const sql = require("mssql");
 const config = {
   user: "sa",
   password: "Coderead@123",
-  server: "localhost",   // NOT undefined
+  server: "192.168.29.236",   // NOT undefined
   database: "finnance1",
   options: {
     instanceName: "SQLEXPRESS",
@@ -11,11 +11,17 @@ const config = {
     trustServerCertificate: true}
 };
 
-const pool = new sql.ConnectionPool(config);
-const poolConnect = pool.connect();
+const poolPromise = new sql.ConnectionPool(config)
+.connect()
+.then(pool => {
+  console.log("Database connected");
+  return pool;
+})
+.catch(err => {
+  console.log("Database connection failed", err);
+});
 
 module.exports = {
-    sql,
-    pool,
-    poolConnect
+  sql,
+  poolPromise
 };
