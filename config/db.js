@@ -5,8 +5,9 @@ const config = {
   password: "Coderead@123",
   server: "192.168.29.236",   // NOT undefined
   database: "finnance1",
+  port: 1433,
   options: {
-    instanceName: "SQLEXPRESS",
+
     encrypt: false,
     trustServerCertificate: true}
 };
@@ -21,7 +22,10 @@ const poolPromise = new sql.ConnectionPool(config)
   console.log("Database connection failed", err);
 });
 
+
+
+
 module.exports = {
   sql,
   poolPromise
-};
+   };

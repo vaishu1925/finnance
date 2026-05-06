@@ -2,55 +2,48 @@ const express = require("express");
 const router = express.Router();
 const { sql, poolPromise } = require("../config/db");
 
+const bcrypt = require("bcrypt");
+
 router.post("/login", async (req, res) => {
+  const { phone, password } = req.body;
 
-const { phone, password } = req.body;
+  try {
+    const pool = await poolPromise;
 
-try {
+    // 1. get user
+    const result = await pool.request()
+      .input("phonenumber", sql.VarChar, phone)
+      .query("SELECT * FROM fin.financer WHERE phonenumber=@phonenumber");
 
-const pool = await poolPromise;
+    if (result.recordset.length === 0) {
+      return res.json({
+        success: false,
+        type: "not_registered"
+      });
+    }
 
-// check phone exists
-const phoneCheck = await pool.request()
-.input("phonenumber", sql.VarChar, phone)
-.query("SELECT * FROM fin.financer WHERE phonenumber=@phonenumber");
+    const user = result.recordset[0];
 
-if(phoneCheck.recordset.length === 0){
-return res.json({
-success:false,
-type:"not_registered",
-message:"Phone number not registered"
-});
-}
+    // 2. compare password
+    const isMatch = await bcrypt.compare(password, user.password);
 
-// check login
-const result = await pool.request()
-.input("phonenumber", sql.VarChar, phone)
-.input("password", sql.VarChar, password)
-.execute("fin.sp_LoginFinancer");
+    if (!isMatch) {
+      return res.json({
+        success: false,
+        type: "wrong_password"
+      });
+    }
 
-if(result.recordset.length === 0){
-return res.json({
-success:false,
-type:"wrong_password",
-message:"Incorrect password"
-});
-}
+    // 3. success
+    res.json({
+      success: true,
+      sign_id: user.financer_id
+    });
 
-const user = result.recordset[0];
-
-res.json({
-success:true,
-sign_id:user.financer_id
-});
-
-}
-
-catch(err){
-console.log(err);
-res.status(500).json({error: err.message});
-}
-
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ error: err.message });
+  }
 });
 
 module.exports = router;
