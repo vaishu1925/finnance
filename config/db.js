@@ -5,11 +5,11 @@ const config = {
   password: "Coderead@123",
   server: "menswear2026.database.windows.net",   // NOT undefined
   database: "Finnance",
-  port: 1433,
+
   options: {
 
-    encrypt: false,
-    trustServerCertificate: true}
+    encrypt: true,
+    trustServerCertificate: false}
 };
 
 const poolPromise = new sql.ConnectionPool(config)
