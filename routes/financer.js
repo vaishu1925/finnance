@@ -46,10 +46,10 @@ try {
 
     console.log(err);
 
-    res.status(500).json({
-        success:false,
-        message:"Server error"
-    });
+res.status(500).json({
+    success:false,
+    message: err.message
+});
 }
 
 });
