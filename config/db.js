@@ -1,10 +1,10 @@
 const sql = require("mssql");
 
 const config = {
-  user: "sa",
+  user: "menswearadmin",
   password: "Coderead@123",
-  server: "192.168.29.236",   // NOT undefined
-  database: "finnance1",
+  server: "menswear2026.database.windows.net",   // NOT undefined
+  database: "Finnance",
   port: 1433,
   options: {
 
