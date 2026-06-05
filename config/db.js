@@ -1,15 +1,14 @@
 const sql = require("mssql");
 
 const config = {
-  user: "menswearadmin",
-  password: "Coderead@123",
-  server: "menswear2026.database.windows.net",   // NOT undefined
-  database: "Finnance",
-    port: 1433,
+  user: process.env.DB_USER,
+  password: process.env.DB_PASSWORD,
+  server: process.env.DB_SERVER,
+  database: process.env.DB_DATABASE,
   options: {
-
     encrypt: true,
-    trustServerCertificate: false}
+    trustServerCertificate: false
+  }
 };
 
 const poolPromise = new sql.ConnectionPool(config)
