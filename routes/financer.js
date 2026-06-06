@@ -71,7 +71,11 @@ res.status(500).json({
     message: err.message
 });
 }
+console.log("RESULT:", result);
+console.log("RECORDSET:", result.recordset);
 
 });
+
+
 
 module.exports = router;
