@@ -5,6 +5,13 @@ const bcrypt = require("bcrypt");
 
 router.post("/financer", async (req, res) => {
 
+        console.log("API HIT");
+
+    return res.json({
+        success: true,
+        message: "API Working"
+    });
+
 const { phone, password, confirmPassword } = req.body;
 
 if (password !== confirmPassword) {
@@ -16,9 +23,17 @@ if (password !== confirmPassword) {
 
 try {
 
-    const pool = await poolPromise;   // ⭐ important
+    console.log("poolPromise =", poolPromise);
+
+    const pool = await poolPromise;
+
+    console.log("POOL TYPE:", typeof pool);
+
+    console.log("pool =", pool);
 
     const hashedPassword = await bcrypt.hash(password,10);
+
+    
 
     const result = await pool.request()
         .input("name", sql.VarChar(20), "Financer")
@@ -45,6 +60,11 @@ try {
     }
 
     console.log(err);
+
+    return res.json({
+   success: true,
+   message: "Pool test success"
+});
 
 res.status(500).json({
     success:false,
